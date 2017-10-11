@@ -2,7 +2,7 @@ import logging
 import time
 
 from opensfm import dataset
-from opensfm import mesh
+from opensfm import triangulate 
 from opensfm import types
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ class Command:
         for i, r in enumerate(reconstructions):
             for shot in r.shots.values():
                 if shot.id in graph:
-                    vertices, faces = mesh.triangle_mesh(shot.id, r, graph,
+                    vertices, faces = triangulate.triangle_mesh(shot.id, r, graph,
                                                          data)
                     shot.mesh = types.ShotMesh()
                     shot.mesh.vertices = vertices

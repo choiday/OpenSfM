@@ -15,7 +15,7 @@ parser.add_argument(
     help='path to the dataset to be processed')
 parser.add_argument(
     '--output',
-    help='the produced TSV file. Will print results on screen if ommited')
+    help='the produced TSV file. Will print (results on screen if ommited'))
 args = parser.parse_args()
 
 # Load data

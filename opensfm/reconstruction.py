@@ -800,8 +800,8 @@ def merge_reconstructions(reconstructions, config):
 
 def paint_reconstruction(data, graph, reconstruction):
     """Set the color of the points from the color of the tracks."""
-    for k, point in reconstruction.points.iteritems():
-        point.color = graph[k].values()[0]['feature_color']
+    for k, point in reconstruction.points.items():
+        point.color = list(graph[k].values())[0]['feature_color']
 
 
 class ShouldBundle:

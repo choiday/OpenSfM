@@ -3,6 +3,7 @@ import cv2
 import pyopengv
 import networkx as nx
 import logging
+import pdb
 from collections import defaultdict
 from itertools import combinations
 
@@ -20,7 +21,7 @@ def match_lowe(index, f2, config):
     squared_ratio = config.get('lowes_ratio', 0.6)**2  # Flann returns squared L2 distances
     good = dists[:, 0] < squared_ratio * dists[:, 1]
     matches = zip(results[good, 0], good.nonzero()[0])
-    return np.array(matches, dtype=int)
+    return matches
 
 
 def match_symmetric(fi, indexi, fj, indexj, config):
@@ -225,7 +226,7 @@ def all_common_tracks(graph, tracks, include_features=True, min_common=50):
         for pair in combinations(track_images, 2):
             track_dict[pair].append(tr)
     common_tracks = {}
-    for k, v in track_dict.iteritems():
+    for k, v in track_dict.items():
         if len(v) < min_common:
             continue
         if include_features:

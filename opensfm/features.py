@@ -18,7 +18,7 @@ def resized_image(image, config):
     h, w, _ = image.shape
     size = max(w, h)
     if 0 < max_size < size:
-        dsize = w * max_size / size, h * max_size / size
+        dsize = w * max_size // size, h * max_size // size
         return cv2.resize(image, dsize=dsize, interpolation=cv2.INTER_AREA)
     else:
         return image

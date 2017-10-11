@@ -2,6 +2,7 @@ import errno
 import json
 import logging
 import os
+import pdb
 
 import cv2
 import numpy as np
@@ -110,25 +111,25 @@ def reconstruction_from_json(obj):
     reconstruction = types.Reconstruction()
 
     # Extract cameras
-    for key, value in obj['cameras'].iteritems():
+    for key, value in obj['cameras'].items():
         camera = camera_from_json(key, value)
         reconstruction.add_camera(camera)
 
     # Extract shots
-    for key, value in obj['shots'].iteritems():
+    for key, value in obj['shots'].items():
         shot = shot_from_json(key, value, reconstruction.cameras)
         reconstruction.add_shot(shot)
 
     # Extract points
     if 'points' in obj:
-        for key, value in obj['points'].iteritems():
+        for key, value in obj['points'].items():
             point = point_from_json(key, value)
             reconstruction.add_point(point)
 
     # Extract pano_shots
     if 'pano_shots' in obj:
         reconstruction.pano_shots = {}
-        for key, value in obj['pano_shots'].iteritems():
+        for key, value in obj['pano_shots'].items():
             shot = shot_from_json(key, value, reconstruction.cameras)
             reconstruction.pano_shots[shot.id] = shot
 
@@ -153,7 +154,7 @@ def cameras_from_json(obj):
     Read cameras from a json object
     """
     cameras = {}
-    for key, value in obj.iteritems():
+    for key, value in obj.items():
         cameras[key] = camera_from_json(key, value)
     return cameras
 
@@ -384,13 +385,15 @@ def json_dump_kwargs(minify=False, codec='utf-8'):
     else:
         indent, separators = 4, None
     return dict(indent=indent, ensure_ascii=False,
-                encoding=codec, separators=separators)
-
+                separators=separators)
 
 def json_dump(data, fout, minify=False, codec='utf-8'):
     kwargs = json_dump_kwargs(minify, codec)
-    return json.dump(data, fout, **kwargs)
-
+    json_str = json.dumps(data, **kwargs)
+    if fout.mode == 'wb':
+        fout.write(json_str.encode())
+    else:
+        fout.write(json_str)
 
 def json_dumps(data, minify=False, codec='utf-8'):
     kwargs = json_dump_kwargs(minify, codec)
@@ -462,14 +465,14 @@ def export_bundler(image_list, reconstructions, track_graph, bundle_file_path,
                     lines.append("0 0 0")
 
         # tracks
-        for point_id, point in points.iteritems():
+        for point_id, point in points.items():
             coord = point.coordinates
             color = map(int, point.color)
             view_list = track_graph[point_id]
             lines.append(' '.join(map(str, coord)))
             lines.append(' '.join(map(str, color)))
             view_line = []
-            for shot_key, view in view_list.iteritems():
+            for shot_key, view in view_list.items():
                 if shot_key in shots.keys():
                     v = view['feature']
                     shot_index = shots_order[shot_key]
@@ -568,7 +571,7 @@ def import_bundler(data_path, bundle_file, list_file, track_file,
             shot.pose.translation = t
             reconstruction.add_shot(shot)
         else:
-            print 'ignore failed image', shot_key
+            print ('ignore failed image', shot_key)
         offset += 5
 
     # tracks

@@ -27,7 +27,8 @@ static int* numpy_import_array_wrapper()
 BOOST_PYTHON_MODULE(csfm) {
   using namespace boost::python;
 
-  google::InitGoogleLogging("csfm");
+//if(!google::IsGoogleLoggingInitialized())
+  //google::InitGoogleLogging("csfm");
   boost::python::numeric::array::set_module_and_type("numpy", "ndarray");
   numpy_import_array_wrapper();
 

@@ -1,3 +1,6 @@
+import os
+import sys
+sys.path.append(os.path.abspath('./opensfm/commands'))
 
 import extract_metadata
 import detect_features
